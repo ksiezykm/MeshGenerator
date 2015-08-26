@@ -1,6 +1,3 @@
-##
-##zmiana
-##
 import wx
 import numpy as np
 import matplotlib
