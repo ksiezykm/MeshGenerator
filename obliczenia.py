@@ -46,9 +46,10 @@ def zakres_wykresu(liczba_wezlow,wspolrzedne_wezlow,zakres):
     #print zakres1_n,wspolrzedne_wezlow[zakres1_n],zakres2_n,wspolrzedne_wezlow[zakres2_n]
     
     
-def wielomian_szostego_stopnia(x,y,y_plus,wezel,liczba_wezlow,wspolrzedne_wezlow):
+def wielomian_szostego_stopnia(x,y,y_plus,wezel,liczba_wezlow,wspolrzedne_wezlow,x_min,x_max,Re,Podzial,odwroc,wezly_rownomiernie):
     
-    liczba_wezlow_plus_1=liczba_wezlow+1    
+    liczba_wezlow_plus_1=liczba_wezlow+1 
+    dlugosc_X=abs(Podzial-x_min)
     
     A1 = np.arange(0.0,7,1.0)
     A2 = np.arange(0.0,7,1.0)
@@ -102,7 +103,7 @@ def wielomian_szostego_stopnia(x,y,y_plus,wezel,liczba_wezlow,wspolrzedne_wezlow
     
     #print A
     
-    wektor_wynikow = np.array([y[0],y[1],y[2],y[3],y[4],y[5],6.0])
+    wektor_wynikow = np.array([y[0],y[1],y[2],y[3],y[4],y[5],dlugosc_X])
     
    # print wektor_wynikow
         
@@ -118,7 +119,7 @@ def wielomian_szostego_stopnia(x,y,y_plus,wezel,liczba_wezlow,wspolrzedne_wezlow
     #y_plus = np.arange(0.0,liczba_wezlow_plus_1,1.0)
     
     
-    wspolrzedne_wezlow[0]=0.0
+    wspolrzedne_wezlow[0]=x_min
     
     for i in range(1,liczba_wezlow):
     
