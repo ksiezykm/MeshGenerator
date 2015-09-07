@@ -48,8 +48,15 @@ def zakres_wykresu(liczba_wezlow,wspolrzedne_wezlow,zakres):
     
 def wielomian_szostego_stopnia(x,y,y_plus,wezel,liczba_wezlow,wspolrzedne_wezlow,x_min,x_max,Re,Podzial,odwroc,wezly_rownomiernie):
     
-    liczba_wezlow_plus_1=liczba_wezlow+1 
-    dlugosc_X=abs(Podzial-x_min)
+    liczba_wezlow_plus_1=liczba_wezlow-wezly_rownomiernie+1 
+    liczba_wezlow_zmienne=liczba_wezlow-wezly_rownomiernie
+    zmienne=abs(Podzial-x_min)
+    stale=abs(x_max-Podzial)
+    
+    krok_staly=0.0
+    
+    if wezly_rownomiernie > 1:
+        krok_staly=stale/float(wezly_rownomiernie)
     
     A1 = np.arange(0.0,7,1.0)
     A2 = np.arange(0.0,7,1.0)
@@ -103,7 +110,7 @@ def wielomian_szostego_stopnia(x,y,y_plus,wezel,liczba_wezlow,wspolrzedne_wezlow
     
     #print A
     
-    wektor_wynikow = np.array([y[0],y[1],y[2],y[3],y[4],y[5],dlugosc_X])
+    wektor_wynikow = np.array([y[0],y[1],y[2],y[3],y[4],y[5],zmienne])
     
    # print wektor_wynikow
         
@@ -121,10 +128,13 @@ def wielomian_szostego_stopnia(x,y,y_plus,wezel,liczba_wezlow,wspolrzedne_wezlow
     
     wspolrzedne_wezlow[0]=x_min
     
-    for i in range(1,liczba_wezlow):
+    for i in range(1,liczba_wezlow_zmienne):
     
         wspolrzedne_wezlow[i] = wspolrzedne_wezlow[i-1] + ( (abcdefg[0]*pow((i-1),6)) + (abcdefg[1]*pow((i-1),5)) + (abcdefg[2]*pow((i-1),4)) + (abcdefg[3]*pow((i-1),3)) + (abcdefg[4]*pow((i-1),2)) + (abcdefg[5]*pow((i-1),1)) + (abcdefg[6]*pow((i-1),0)) )
     
+    for i in range(liczba_wezlow_zmienne,liczba_wezlow):
+        wspolrzedne_wezlow[i] = wspolrzedne_wezlow[i-1] + krok_staly
+
     
    # print liczba_wezlow_plus_1
         
@@ -134,12 +144,13 @@ def wielomian_szostego_stopnia(x,y,y_plus,wezel,liczba_wezlow,wspolrzedne_wezlow
     for i in range(1,liczba_wezlow):
          y_plus[i]=(wspolrzedne_wezlow[i]-wspolrzedne_wezlow[i-1])
 
-   # for i in range(0,liczba_wezlow):
-        #print i, wspolrzedne_wezlow[i], y_plus[i]
+    for i in range(0,liczba_wezlow):
+        print i, wspolrzedne_wezlow[i], y_plus[i]
     
     y_plus[0]=y_plus[1]
-
-
+    
+    
+   
 
 
 

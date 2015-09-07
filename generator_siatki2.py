@@ -11,13 +11,13 @@ from obliczenia import *
 # end wxGlade
 liczba=4
 pozycja=0
-liczba_wezlow=320
+liczba_wezlow=350
 
 Re=236.6
 x_min=0.0
-x_max=6.0
-Podzial=x_max
-wezly_rownomiernie=64
+x_max=7.0
+Podzial=6.0
+wezly_rownomiernie=30
 odwroc=0
 
 zakres1=2.1
@@ -30,7 +30,7 @@ x2=50
 x3=100
 x4=160
 x5=280
-x6=320
+x6=liczba_wezlow-wezly_rownomiernie
 
 y1=7.8/100
 y2=1.0/100
@@ -77,7 +77,7 @@ class MyFrame2(wx.Frame):
         self.name_Podzial = wx.StaticText(self.panel_3, -1, "Podzial wezlow", style=wx.ALIGN_CENTRE)
         self.text_ctrl_Podzial = wx.TextCtrl(self.panel_3, -1, str(Podzial))
         self.name_wezly_rownomiernie = wx.StaticText(self.panel_3, -1, "Wezly rownomiernie", style=wx.ALIGN_CENTRE)
-        self.text_ctrl_wezly_rownomiernie = wx.TextCtrl(self.panel_3, -1, str(wezly_rownomiernie))
+        self.spin_ctrl_wezly_rownomiernie = wx.SpinCtrl(self.panel_3, -1, str(wezly_rownomiernie), min=0, max=10000)
         self.Check_odwroc = wx.CheckBox(self.panel_3, -1, "Odwroc")
         self.Button_start = wx.Button(self.panel_3,1,"START")
         self.window_2 = FigureCanvas(self, -1, self.figure)
@@ -117,7 +117,7 @@ class MyFrame2(wx.Frame):
         self.Bind(wx.EVT_TEXT, self.evt_x_max, self.text_ctrl_x_max)
         self.Bind(wx.EVT_TEXT, self.evt_Re, self.text_ctrl_Re)
         self.Bind(wx.EVT_TEXT, self.evt_Podzial, self.text_ctrl_Podzial)
-        self.Bind(wx.EVT_TEXT, self.evt_wezly_rownomiernie, self.text_ctrl_wezly_rownomiernie)
+        self.Bind(wx.EVT_SPINCTRL, self.evt_wezly_rownomiernie, self.spin_ctrl_wezly_rownomiernie)
         self.Bind(wx.EVT_CHECKBOX, self.evt_odwroc, self.Check_odwroc)
         self.Bind(wx.EVT_BUTTON, self.evt_start, self.Button_start)
         self.Bind(wx.EVT_SPINCTRL, self.evt_x1, self.spin_ctrl_x1)
@@ -161,7 +161,7 @@ class MyFrame2(wx.Frame):
         grid_sizer_10.Add(self.name_Podzial, 0, wx.ALL, 5)
         grid_sizer_10.Add(self.text_ctrl_Podzial, 0, wx.ALL, 5)
         grid_sizer_10.Add(self.name_wezly_rownomiernie, 0, wx.ALL, 5)
-        grid_sizer_10.Add(self.text_ctrl_wezly_rownomiernie, 0, wx.ALL, 5)
+        grid_sizer_10.Add(self.spin_ctrl_wezly_rownomiernie, 0, wx.ALL, 5)
         grid_sizer_10.Add(self.Check_odwroc, 0, wx.ALL, 5)
         grid_sizer_10.Add(self.Button_start, 0, wx.ALL, 5)
         self.panel_3.SetSizer(grid_sizer_10)
@@ -198,6 +198,8 @@ class MyFrame2(wx.Frame):
         
         zakres1=float(self.text_ctrl_zakres1.GetValue())
         zakres2=float(self.text_ctrl_zakres2.GetValue())
+        x_max=float(self.text_ctrl_x_max.GetValue())
+        Podzial=float(self.text_ctrl_Podzial.GetValue())
                
         wielomian_szostego_stopnia(x,y,y_plus,wezel,liczba_wezlow,wspolrzedne_wezlow,x_min,x_max,Re,Podzial,odwroc,wezly_rownomiernie)
         
@@ -303,14 +305,13 @@ class MyFrame2(wx.Frame):
 
     def evt_ilosc_wezlow(self, event):  # wxGlade: MyFrame2.<event_handler>
         liczba_wezlow=int(self.spin_ctrl_ilosc_wezlow.GetValue())
-        self.spin_ctrl_x6.SetRange(1,liczba_wezlow)
+        wezly_rownomiernie=int(self.spin_ctrl_wezly_rownomiernie.GetValue())
+        self.spin_ctrl_x6.SetRange(1,liczba_wezlow-wezly_rownomiernie)
         self.spin_ctrl_x5.SetRange(1,liczba_wezlow)
         self.spin_ctrl_x4.SetRange(1,liczba_wezlow)
         self.spin_ctrl_x3.SetRange(1,liczba_wezlow)
         self.spin_ctrl_x2.SetRange(1,liczba_wezlow)
         self.spin_ctrl_x1.SetRange(1,liczba_wezlow)
-        self.spin_ctrl_zakres1.SetRange(1,liczba_wezlow)
-        self.spin_ctrl_zakres2.SetRange(1,liczba_wezlow)
         self.wykres(x,y,liczba_wezlow,zakres1,zakres2,x_min,x_max,Re,Podzial,odwroc,wezly_rownomiernie)
         event.Skip()
 
@@ -321,6 +322,8 @@ class MyFrame2(wx.Frame):
 
     def evt_x_max(self, event):  # wxGlade: MyFrame2.<event_handler>
         x_max=float(self.text_ctrl_x_max.GetValue())
+        #self.text_ctrl_Podzial.SetValue(str(x_max))
+        Podzial=float(self.text_ctrl_Podzial.GetValue())
         self.wykres(x,y,liczba_wezlow,zakres1,zakres2,x_min,x_max,Re,Podzial,odwroc,wezly_rownomiernie)
         event.Skip()
         
@@ -330,11 +333,16 @@ class MyFrame2(wx.Frame):
 
     def evt_Podzial(self, event):  # wxGlade: MyFrame2.<event_handler>
         Podzial=float(self.text_ctrl_Podzial.GetValue())
+        x_max=float(self.text_ctrl_x_max.GetValue())
         self.wykres(x,y,liczba_wezlow,zakres1,zakres2,x_min,x_max,Re,Podzial,odwroc,wezly_rownomiernie)
         event.Skip()
         
     def evt_wezly_rownomiernie(self, event):  # wxGlade: MyFrame2.<event_handler>
-        wezly_rownomiernie=float(self.text_ctrl_wezly_rownomiernie.GetValue())
+        wezly_rownomiernie=int(self.spin_ctrl_wezly_rownomiernie.GetValue())
+        self.spin_ctrl_x6.SetRange(1,(int(self.spin_ctrl_ilosc_wezlow.GetValue())-wezly_rownomiernie))
+        self.spin_ctrl_x6.SetValue(int(self.spin_ctrl_ilosc_wezlow.GetValue())-wezly_rownomiernie)
+        x[5]=int(self.spin_ctrl_x6.GetValue())
+        #liczba_wezlow=int(self.spin_ctrl_ilosc_wezlow.GetValue())
         self.wykres(x,y,liczba_wezlow,zakres1,zakres2,x_min,x_max,Re,Podzial,odwroc,wezly_rownomiernie)
         event.Skip()
         
