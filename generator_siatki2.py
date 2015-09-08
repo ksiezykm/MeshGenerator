@@ -103,6 +103,9 @@ class MyFrame2(wx.Frame):
         self.name_x4 = wx.StaticText(self.panel_6, -1, "x4", style=wx.ALIGN_CENTRE)
         self.name_x5 = wx.StaticText(self.panel_6, -1, "x5", style=wx.ALIGN_CENTRE)
         self.name_x6 = wx.StaticText(self.panel_6, -1, "x6", style=wx.ALIGN_CENTRE)
+        self.Button_saveX = wx.Button(self.panel_6,-1,"ZAPISZ X")
+        self.Button_saveY = wx.Button(self.panel_6,-1,"ZAPISZ Y")
+        self.Button_saveZ = wx.Button(self.panel_6,-1,"ZAPISZ Z")
 
         self.__set_properties()
         self.__do_layout()
@@ -130,6 +133,9 @@ class MyFrame2(wx.Frame):
         self.Bind(wx.EVT_SPINCTRL, self.evt_x4, self.spin_ctrl_x4)
         self.Bind(wx.EVT_SPINCTRL, self.evt_x5, self.spin_ctrl_x5)
         self.Bind(wx.EVT_SPINCTRL, self.evt_x6, self.spin_ctrl_x6)
+        self.Bind(wx.EVT_BUTTON, self.evt_saveX, self.Button_saveX)
+        self.Bind(wx.EVT_BUTTON, self.evt_saveY, self.Button_saveY)
+        self.Bind(wx.EVT_BUTTON, self.evt_saveZ, self.Button_saveZ)
         # end wxGlade
 
     def __set_properties(self):
@@ -194,6 +200,9 @@ class MyFrame2(wx.Frame):
         grid_sizer_11.Add(self.name_x4, 0, wx.ALL, 5)
         grid_sizer_11.Add(self.name_x5, 0, wx.ALL, 5)
         grid_sizer_11.Add(self.name_x6, 0, wx.ALL, 5)
+        grid_sizer_11.Add(self.Button_saveX, 0, wx.ALL, 5)
+        grid_sizer_11.Add(self.Button_saveY, 0, wx.ALL, 5)
+        grid_sizer_11.Add(self.Button_saveZ, 0, wx.ALL, 5)
         self.panel_6.SetSizer(grid_sizer_11)
         grid_sizer_9.Add(self.panel_6, 1, wx.EXPAND, 0)
         self.SetSizer(grid_sizer_9)
@@ -224,7 +233,9 @@ class MyFrame2(wx.Frame):
         y[3]=float(self.text_ctrl_y4.GetValue())
         y[4]=float(self.text_ctrl_y5.GetValue())
         y[5]=float(self.text_ctrl_y6.GetValue())
-               
+        
+        odwroc=int(self.Check_odwroc.IsChecked())
+                       
         wielomian_szostego_stopnia(x,y,y_plus,wezel,liczba_wezlow,wspolrzedne_wezlow,x_min,x_max,Re,Podzial,odwroc,wezly_rownomiernie,Przesuniecie)
         
         zakres1_n = zakres_wykresu(liczba_wezlow,wspolrzedne_wezlow,zakres1)
@@ -375,7 +386,7 @@ class MyFrame2(wx.Frame):
         event.Skip()
         
     def evt_odwroc(self, event):  # wxGlade: MyFrame2.<event_handler>
-        print "Odwroc"
+        self.wykres(x,y,liczba_wezlow,zakres1,zakres2,x_min,x_max,Re,Podzial,odwroc,wezly_rownomiernie)
         event.Skip()
         
     def evt_start(self, event):  # wxGlade: MyFrame2.<event_handler>
@@ -388,6 +399,33 @@ class MyFrame2(wx.Frame):
 
     def evt_zakres2(self, event):  # wxGlade: MyFrame2.<event_handler>
         self.wykres(x,y,liczba_wezlow,zakres1,zakres2,x_min,x_max,Re,Podzial,odwroc,wezly_rownomiernie)
+        event.Skip()
+        
+    def evt_saveX(self, event):  # wxGlade: MyFrame2.<event_handler>
+        zapis = open('MESH_X.txt', 'w')
+        for i in range(0,liczba_wezlow):
+            zapis.write(str(wspolrzedne_wezlow[i]))
+            zapis.write('\n')
+        zapis.close()
+        print "zapis X"
+        event.Skip()
+        
+    def evt_saveY(self, event):  # wxGlade: MyFrame2.<event_handler>
+        zapis = open('MESH_Y.txt', 'w')
+        for i in range(0,liczba_wezlow):
+            zapis.write(str(wspolrzedne_wezlow[i]))
+            zapis.write('\\n')
+        zapis.close()
+        print "zapis Y"
+        event.Skip()
+        
+    def evt_saveZ(self, event):  # wxGlade: MyFrame2.<event_handler>
+        zapis = open('MESH_Z.txt', 'w')
+        for i in range(0,liczba_wezlow):
+            zapis.write(str(wspolrzedne_wezlow[i]))
+            zapis.write('\\n')
+        zapis.close()
+        print "zapis Z"
         event.Skip()
 
 

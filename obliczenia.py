@@ -48,10 +48,17 @@ def zakres_wykresu(liczba_wezlow,wspolrzedne_wezlow,zakres):
     
 def wielomian_szostego_stopnia(x,y,y_plus,wezel,liczba_wezlow,wspolrzedne_wezlow,x_min,x_max,Re,Podzial,odwroc,wezly_rownomiernie,Przesuniecie):
     
+    pomocnicza_zmienne = np.arange(0.0,1000,1.0)
+    pomocnicza_stale = np.arange(0.0,1000,1.0)
+    pomocnicza = np.arange(0.0,1000,1.0)
     liczba_wezlow_plus_1=liczba_wezlow-wezly_rownomiernie+1 
     liczba_wezlow_zmienne=liczba_wezlow-wezly_rownomiernie
     zmienne=abs(Podzial-x_min)
     stale=abs(x_max-Podzial)
+    
+   # if odwroc == 1:
+        #zmienne=abs(x_max-Podzial)
+        #stale=abs(Podzial-x_min)
     
     krok_staly=0.0
     
@@ -125,15 +132,29 @@ def wielomian_szostego_stopnia(x,y,y_plus,wezel,liczba_wezlow,wspolrzedne_wezlow
     #wezel = np.arange(0.0,liczba_wezlow_plus_1,1.0)
     #y_plus = np.arange(0.0,liczba_wezlow_plus_1,1.0)
     
-    
-    wspolrzedne_wezlow[0]=x_min
+   
+        
+    pomocnicza_zmienne[0]=x_min
     
     for i in range(1,liczba_wezlow_zmienne):
+        pomocnicza_zmienne[i] = pomocnicza_zmienne[i-1] + ( (abcdefg[0]*pow((i-1),6)) + (abcdefg[1]*pow((i-1),5)) + (abcdefg[2]*pow((i-1),4)) + (abcdefg[3]*pow((i-1),3)) + (abcdefg[4]*pow((i-1),2)) + (abcdefg[5]*pow((i-1),1)) + (abcdefg[6]*pow((i-1),0)) )
     
-        wspolrzedne_wezlow[i] = wspolrzedne_wezlow[i-1] + ( (abcdefg[0]*pow((i-1),6)) + (abcdefg[1]*pow((i-1),5)) + (abcdefg[2]*pow((i-1),4)) + (abcdefg[3]*pow((i-1),3)) + (abcdefg[4]*pow((i-1),2)) + (abcdefg[5]*pow((i-1),1)) + (abcdefg[6]*pow((i-1),0)) )
+   
+    pomocnicza_stale[0]=pomocnicza_zmienne[liczba_wezlow_zmienne-1]+krok_staly
+        
+    for i in range(1,wezly_rownomiernie):
+        pomocnicza_stale[i] = pomocnicza_stale[i-1] + krok_staly
+            
+            
+    for i in range(0,liczba_wezlow_zmienne):
+        wspolrzedne_wezlow[i]=pomocnicza_zmienne[i]
+            
+    for i in range(0,wezly_rownomiernie):
+        wspolrzedne_wezlow[i+liczba_wezlow_zmienne]=pomocnicza_stale[i]
+            
+   
+        
     
-    for i in range(liczba_wezlow_zmienne,liczba_wezlow):
-        wspolrzedne_wezlow[i] = wspolrzedne_wezlow[i-1] + krok_staly
         
            
     for i in range(0,liczba_wezlow):
@@ -144,7 +165,17 @@ def wielomian_szostego_stopnia(x,y,y_plus,wezel,liczba_wezlow,wspolrzedne_wezlow
         
     for i in range(0,liczba_wezlow):
         wspolrzedne_wezlow[i]=wspolrzedne_wezlow[i]-Przesuniecie
-
+    
+    if odwroc == 1:
+        
+        for i in range(0,liczba_wezlow):
+            pomocnicza[i]=wspolrzedne_wezlow[liczba_wezlow-i-1]
+            
+        for i in range(0,liczba_wezlow):
+            wspolrzedne_wezlow[i]=x_max
+            
+        for i in range(0,liczba_wezlow):
+            wspolrzedne_wezlow[i]=x_max-pomocnicza[i]
     
    # print liczba_wezlow_plus_1
         
@@ -154,8 +185,8 @@ def wielomian_szostego_stopnia(x,y,y_plus,wezel,liczba_wezlow,wspolrzedne_wezlow
     for i in range(1,liczba_wezlow):
          y_plus[i]=(wspolrzedne_wezlow[i]-wspolrzedne_wezlow[i-1])
 
-    for i in range(0,liczba_wezlow):
-        print i, wspolrzedne_wezlow[i], y_plus[i],liczba_wezlow
+    #for i in range(0,liczba_wezlow):
+        #print i, wspolrzedne_wezlow[i], y_plus[i]
     
     y_plus[0]=y_plus[1]
     
