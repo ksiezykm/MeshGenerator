@@ -19,6 +19,7 @@ x_max=7.0
 Podzial=6.0
 wezly_rownomiernie=30
 odwroc=0
+Przesuniecie=0.0
 
 zakres1=2.1
 zakres2=2.2
@@ -78,6 +79,8 @@ class MyFrame2(wx.Frame):
         self.text_ctrl_Podzial = wx.TextCtrl(self.panel_3, -1, str(Podzial))
         self.name_wezly_rownomiernie = wx.StaticText(self.panel_3, -1, "Wezly rownomiernie", style=wx.ALIGN_CENTRE)
         self.spin_ctrl_wezly_rownomiernie = wx.SpinCtrl(self.panel_3, -1, str(wezly_rownomiernie), min=0, max=10000)
+        self.name_Przesuniecie = wx.StaticText(self.panel_3, -1, "Przesuniecie", style=wx.ALIGN_CENTRE)
+        self.text_ctrl_Przesuniecie = wx.TextCtrl(self.panel_3, -1, str(Przesuniecie))        
         self.Check_odwroc = wx.CheckBox(self.panel_3, -1, "Odwroc")
         self.Button_start = wx.Button(self.panel_3,1,"START")
         self.window_2 = FigureCanvas(self, -1, self.figure)
@@ -117,6 +120,7 @@ class MyFrame2(wx.Frame):
         self.Bind(wx.EVT_TEXT, self.evt_x_max, self.text_ctrl_x_max)
         self.Bind(wx.EVT_TEXT, self.evt_Re, self.text_ctrl_Re)
         self.Bind(wx.EVT_TEXT, self.evt_Podzial, self.text_ctrl_Podzial)
+        self.Bind(wx.EVT_TEXT, self.evt_Przesuniecie, self.text_ctrl_Przesuniecie)
         self.Bind(wx.EVT_SPINCTRL, self.evt_wezly_rownomiernie, self.spin_ctrl_wezly_rownomiernie)
         self.Bind(wx.EVT_CHECKBOX, self.evt_odwroc, self.Check_odwroc)
         self.Bind(wx.EVT_BUTTON, self.evt_start, self.Button_start)
@@ -160,6 +164,8 @@ class MyFrame2(wx.Frame):
         grid_sizer_10.Add(self.text_ctrl_Re, 0, wx.ALL, 5)
         grid_sizer_10.Add(self.name_Podzial, 0, wx.ALL, 5)
         grid_sizer_10.Add(self.text_ctrl_Podzial, 0, wx.ALL, 5)
+        grid_sizer_10.Add(self.name_Przesuniecie, 0, wx.ALL, 5)
+        grid_sizer_10.Add(self.text_ctrl_Przesuniecie, 0, wx.ALL, 5)
         grid_sizer_10.Add(self.name_wezly_rownomiernie, 0, wx.ALL, 5)
         grid_sizer_10.Add(self.spin_ctrl_wezly_rownomiernie, 0, wx.ALL, 5)
         grid_sizer_10.Add(self.Check_odwroc, 0, wx.ALL, 5)
@@ -198,10 +204,28 @@ class MyFrame2(wx.Frame):
         
         zakres1=float(self.text_ctrl_zakres1.GetValue())
         zakres2=float(self.text_ctrl_zakres2.GetValue())
+        x_min=float(self.text_ctrl_x_min.GetValue())
         x_max=float(self.text_ctrl_x_max.GetValue())
         Podzial=float(self.text_ctrl_Podzial.GetValue())
+        liczba_wezlow=int(self.spin_ctrl_ilosc_wezlow.GetValue())
+        wezly_rownomiernie=int(self.spin_ctrl_wezly_rownomiernie.GetValue())
+        Przesuniecie=float(self.text_ctrl_Przesuniecie.GetValue())
+        
+        x[0]=int(self.spin_ctrl_x1.GetValue())
+        x[1]=int(self.spin_ctrl_x2.GetValue())
+        x[2]=int(self.spin_ctrl_x3.GetValue())
+        x[3]=int(self.spin_ctrl_x4.GetValue())
+        x[4]=int(self.spin_ctrl_x5.GetValue())
+        x[5]=int(self.spin_ctrl_x6.GetValue())
+        
+        y[0]=float(self.text_ctrl_y1.GetValue())
+        y[1]=float(self.text_ctrl_y2.GetValue())
+        y[2]=float(self.text_ctrl_y3.GetValue())
+        y[3]=float(self.text_ctrl_y4.GetValue())
+        y[4]=float(self.text_ctrl_y5.GetValue())
+        y[5]=float(self.text_ctrl_y6.GetValue())
                
-        wielomian_szostego_stopnia(x,y,y_plus,wezel,liczba_wezlow,wspolrzedne_wezlow,x_min,x_max,Re,Podzial,odwroc,wezly_rownomiernie)
+        wielomian_szostego_stopnia(x,y,y_plus,wezel,liczba_wezlow,wspolrzedne_wezlow,x_min,x_max,Re,Podzial,odwroc,wezly_rownomiernie,Przesuniecie)
         
         zakres1_n = zakres_wykresu(liczba_wezlow,wspolrzedne_wezlow,zakres1)
         zakres2_n = zakres_wykresu(liczba_wezlow,wspolrzedne_wezlow,zakres2) 
@@ -334,6 +358,10 @@ class MyFrame2(wx.Frame):
     def evt_Podzial(self, event):  # wxGlade: MyFrame2.<event_handler>
         Podzial=float(self.text_ctrl_Podzial.GetValue())
         x_max=float(self.text_ctrl_x_max.GetValue())
+        self.wykres(x,y,liczba_wezlow,zakres1,zakres2,x_min,x_max,Re,Podzial,odwroc,wezly_rownomiernie)
+        event.Skip()
+        
+    def evt_Przesuniecie(self, event):  # wxGlade: MyFrame2.<event_handler>
         self.wykres(x,y,liczba_wezlow,zakres1,zakres2,x_min,x_max,Re,Podzial,odwroc,wezly_rownomiernie)
         event.Skip()
         

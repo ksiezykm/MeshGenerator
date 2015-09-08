@@ -46,7 +46,7 @@ def zakres_wykresu(liczba_wezlow,wspolrzedne_wezlow,zakres):
     #print zakres1_n,wspolrzedne_wezlow[zakres1_n],zakres2_n,wspolrzedne_wezlow[zakres2_n]
     
     
-def wielomian_szostego_stopnia(x,y,y_plus,wezel,liczba_wezlow,wspolrzedne_wezlow,x_min,x_max,Re,Podzial,odwroc,wezly_rownomiernie):
+def wielomian_szostego_stopnia(x,y,y_plus,wezel,liczba_wezlow,wspolrzedne_wezlow,x_min,x_max,Re,Podzial,odwroc,wezly_rownomiernie,Przesuniecie):
     
     liczba_wezlow_plus_1=liczba_wezlow-wezly_rownomiernie+1 
     liczba_wezlow_zmienne=liczba_wezlow-wezly_rownomiernie
@@ -134,6 +134,16 @@ def wielomian_szostego_stopnia(x,y,y_plus,wezel,liczba_wezlow,wspolrzedne_wezlow
     
     for i in range(liczba_wezlow_zmienne,liczba_wezlow):
         wspolrzedne_wezlow[i] = wspolrzedne_wezlow[i-1] + krok_staly
+        
+           
+    for i in range(0,liczba_wezlow):
+        wspolrzedne_wezlow[i]=wspolrzedne_wezlow[i]/wspolrzedne_wezlow[liczba_wezlow-1]
+        
+    for i in range(0,liczba_wezlow):
+        wspolrzedne_wezlow[i]=wspolrzedne_wezlow[i]*x_max
+        
+    for i in range(0,liczba_wezlow):
+        wspolrzedne_wezlow[i]=wspolrzedne_wezlow[i]-Przesuniecie
 
     
    # print liczba_wezlow_plus_1
@@ -145,7 +155,7 @@ def wielomian_szostego_stopnia(x,y,y_plus,wezel,liczba_wezlow,wspolrzedne_wezlow
          y_plus[i]=(wspolrzedne_wezlow[i]-wspolrzedne_wezlow[i-1])
 
     for i in range(0,liczba_wezlow):
-        print i, wspolrzedne_wezlow[i], y_plus[i]
+        print i, wspolrzedne_wezlow[i], y_plus[i],liczba_wezlow
     
     y_plus[0]=y_plus[1]
     
