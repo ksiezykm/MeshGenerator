@@ -191,7 +191,7 @@ def wielomian_szostego_stopnia(x,y,y_plus,wezel,liczba_wezlow,wspolrzedne_wezlow
     y_plus[0]=y_plus[1]
     
     
-   
+    del A,A1,A2,A3,A4,A5,A6,A7,wektor_wynikow,pomocnicza,pomocnicza_stale,pomocnicza_zmienne,abcdefg
 
 
 

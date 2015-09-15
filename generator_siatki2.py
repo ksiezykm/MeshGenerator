@@ -2,11 +2,12 @@ import wx
 import numpy as np
 import matplotlib
 matplotlib.use('GTKAgg')
-import matplotlib.pyplot as plt
-from matplotlib.figure import Figure
-from matplotlib.backends.backend_wxagg import FigureCanvasWxAgg as FigureCanvas
+#import matplotlib.pyplot as plt
+#from matplotlib.figure import Figure
+#from matplotlib.backends.backend_wxagg import FigureCanvasWxAgg as FigureCanvas
 import pylab
 from obliczenia import *
+import wx.lib.plot as plot
 # begin wxGlade: extracode
 # end wxGlade
 liczba=4
@@ -51,7 +52,7 @@ y=[y1,y2,y3,y4,y5,y6]
 #wypelnij_y(x,y)
 class MyFrame2(wx.Frame):
     def __init__(self, *args, **kwds):
-        self.figure = matplotlib.figure.Figure()        
+        #self.figure = matplotlib.figure.Figure()        
         
         # begin wxGlade: MyFrame2.__init__
         kwds["style"] = wx.DEFAULT_FRAME_STYLE
@@ -83,7 +84,8 @@ class MyFrame2(wx.Frame):
         self.text_ctrl_Przesuniecie = wx.TextCtrl(self.panel_3, -1, str(Przesuniecie))        
         self.Check_odwroc = wx.CheckBox(self.panel_3, -1, "Odwroc")
         self.Button_start = wx.Button(self.panel_3,1,"START")
-        self.window_2 = FigureCanvas(self, -1, self.figure)
+        self.window_2 = wx.Panel(self,-1,size=(400,300))
+        #self.figure = wx.lib.plot.PlotCanvas(self.window_2, size=(400,300))
         self.panel_5 = wx.Panel(self, -1)
         self.name_wezly = wx.StaticText(self.panel_5, -1, "ilosc wezlow")
         self.spin_ctrl_ilosc_wezlow = wx.SpinCtrl(self.panel_5, -1, str(liczba_wezlow), min=0, max=10000)
@@ -140,8 +142,8 @@ class MyFrame2(wx.Frame):
 
     def __set_properties(self):
         # begin wxGlade: MyFrame2.__set_properties
-        self.SetTitle("frame_3")
-        self.SetSize((970, 600))
+        self.SetTitle("Mesh GENERATOR")
+        self.SetSize((970, 800))
         # end wxGlade
 
     def __do_layout(self):
@@ -242,26 +244,73 @@ class MyFrame2(wx.Frame):
         zakres2_n = zakres_wykresu(liczba_wezlow,wspolrzedne_wezlow,zakres2) 
         
         liczba_wezlow_w_zakresie=zakres2_n-zakres1_n
-        self.zakres_wyswietlania2.SetLabel(str(liczba_wezlow_w_zakresie))
+        #self.zakres_wyswietlania2.SetLabel(str(liczba_wezlow_w_zakresie))
         
        
-        self.figure = matplotlib.figure.Figure()
-        self.y_plus_n = self.figure.add_subplot(2,2,1)
-        self.y_plus_x = self.figure.add_subplot(2,2,2)
-        self.y_plus_x2 = self.figure.add_subplot(2,1,2)
+        #self.figure = matplotlib.figure.Figure()
+        #self.y_plus_n = self.figure.add_subplot(2,2,1)
+        #self.y_plus_x = self.figure.add_subplot(2,2,2)
+        #self.y_plus_x2 = self.figure.add_subplot(2,1,2)
+    
+        #self.y_plus_n.plot(wezel[0:liczba_wezlow],y_plus[0:liczba_wezlow])
         
+        #self.y_plus_x.plot(wspolrzedne_wezlow[0:liczba_wezlow],y_plus[0:liczba_wezlow]) 
         
-        #print wspolrzedne_wezlow[liczba_wezlow-1]
-        #print zakres1_n,zakres2_n
+        #self.y_plus_x2.plot(wspolrzedne_wezlow[zakres1_n:zakres2_n],y_plus[zakres1_n:zakres2_n],marker='o', color='r') 
         
-        self.y_plus_n.plot(wezel[0:liczba_wezlow],y_plus[0:liczba_wezlow])
+        #self.window_2 = FigureCanvas(self, -1, self.figure)
+        self.data1 = []
         
-        self.y_plus_x.plot(wspolrzedne_wezlow[0:liczba_wezlow],y_plus[0:liczba_wezlow]) 
+        for i in range(0,liczba_wezlow):
+            f=(wezel[i],y_plus[i])
+            self.data1.append(f)
+            
         
-        self.y_plus_x2.plot(wspolrzedne_wezlow[zakres1_n:zakres2_n],y_plus[zakres1_n:zakres2_n],marker='o', color='r') 
+        self.figure = plot.PlotCanvas(self.window_2)
+        self.figure.SetInitialSize(size=(310,300))
+        self.figure.SetPosition((0,0))
         
-        self.window_2 = FigureCanvas(self, -1, self.figure)
+        self.line = plot.PolyLine(self.data1,colour='red',width=2)
+        self.gc = plot.PlotGraphics([self.line])
+        self.figure.Draw(self.gc)
+        
+        ################################################33
+        
+        self.data2 = []
+        
+        for i in range(0,liczba_wezlow):
+            f=(wspolrzedne_wezlow[i],y_plus[i])
+            self.data2.append(f)
+            
+        
+        self.figure2 = plot.PlotCanvas(self.window_2)
+        self.figure2.SetInitialSize(size=(310,300))
+        self.figure2.SetPosition((310,0))
+        
+        self.line2 = plot.PolyLine(self.data2,colour='red',width=2)
+        self.gc = plot.PlotGraphics([self.line2])
+        self.figure2.Draw(self.gc)
+        
+        ################################################33
+        
+        self.data3 = []
+        
+        for i in range(zakres1_n,zakres2_n):
+            f=(wspolrzedne_wezlow[i],y_plus[i])
+            self.data3.append(f)
+            
+        
+        self.figure3 = plot.PlotCanvas(self.window_2)
+        self.figure3.SetInitialSize(size=(640,220))
+        self.figure3.SetPosition((0,300))
+        
+        self.line3 = plot.PolyLine(self.data3,colour='red',width=2)
+        self.punkty = plot.PolyMarker(self.data3, legend='',colour='blue',marker='circle',size=1)
+        self.gc = plot.PlotGraphics([self.line3, self.punkty])
+        self.figure3.Draw(self.gc)
          
+        del self.data1, self.data2, self.data3
+        
         self.__set_properties()
         self.__do_layout()
 
@@ -414,7 +463,7 @@ class MyFrame2(wx.Frame):
         zapis = open('MESH_Y.txt', 'w')
         for i in range(0,liczba_wezlow):
             zapis.write(str(wspolrzedne_wezlow[i]))
-            zapis.write('\\n')
+            zapis.write('\n')
         zapis.close()
         print "zapis Y"
         event.Skip()
@@ -423,7 +472,7 @@ class MyFrame2(wx.Frame):
         zapis = open('MESH_Z.txt', 'w')
         for i in range(0,liczba_wezlow):
             zapis.write(str(wspolrzedne_wezlow[i]))
-            zapis.write('\\n')
+            zapis.write('\n')
         zapis.close()
         print "zapis Z"
         event.Skip()
